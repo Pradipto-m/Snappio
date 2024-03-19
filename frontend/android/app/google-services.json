@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "343274499430",
+    "project_id": "snappio-pro",
+    "storage_bucket": "snappio-pro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343274499430:android:4727bf54584d2fdcc8aca7",
+        "android_client_info": {
+          "package_name": "com.pradipto.snappio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1z6fe4DtFtKbOywAwtHzi0vL60BZjLnA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

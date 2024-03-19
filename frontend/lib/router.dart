@@ -11,13 +11,17 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     //     builder: (_) => const SplashScreen());
     case AuthScreen.routeName:
       return MaterialPageRoute(
-          settings: routeSettings, builder: (_) => const AuthScreen());
+        settings: routeSettings,
+        builder: (_) => const AuthScreen());
     case OtpScreen.routeName:
       return MaterialPageRoute(
-          settings: routeSettings, builder: (_) => const OtpScreen());
+        settings: routeSettings,
+        builder: (_) => const OtpScreen(),
+      );
     case SignupPage.routeName:
       return MaterialPageRoute(
-          settings: routeSettings, builder: (_) => const SignupPage());
+        settings: routeSettings,
+        builder: (_) => const SignupPage());
     // case BottomNavBar.routeName:
     //   return MaterialPageRoute(
     //       settings: routeSettings, builder: (_) => const BottomNavBar());
@@ -25,8 +29,8 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const Scaffold(
-            body: Center(
-            child: Text("This page doesn't exists"),
-        )));
+          body: Center(
+          child: Text("This page doesn't exists"),
+      )));
   }
 }

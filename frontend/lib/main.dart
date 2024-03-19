@@ -1,12 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import 'package:snappio_frontend/provider/msg_provider.dart';
-// import 'package:snappio_frontend/provider/post_provider.dart';
-// import 'package:snappio_frontend/provider/user_provider.dart';
 import 'package:snappio/router.dart';
 import 'package:snappio/theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

@@ -1,7 +1,12 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:snappio/services/auth_service.dart';
+
+class VerificationArgs {
+  final String verificationId;
+  const VerificationArgs({required this.verificationId});
+}
 
 class OtpScreen extends StatefulWidget {
   static const String routeName = "/verify";
@@ -16,15 +21,23 @@ class _OtpScreenState extends State<OtpScreen> {
   static bool _load = false;
   static String _otp = "";
 
-  void btnPressed(BuildContext context) {
-    setState(() {
-      _load = !_load;
+  void onSubmit(BuildContext context, String verificationId) {
+    setState(() {_load = !_load;});
+    verifyOTP(context, verificationId, _otp).then((value) {
+      log("OTP verification successful");
+      setState(() {_load = !_load;});
+    }).catchError((err) {
+      log(err.toString());
+      setState(() {_load = !_load;});
     });
-    log("OTP: $_otp");
   }
 
   @override
   Widget build(BuildContext context) {
+
+    final argument = ModalRoute.of(context)!.settings.arguments as VerificationArgs;
+    final verificationId = argument.verificationId;
+
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -200,7 +213,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     ),
                     const SizedBox(height: 80),
                     InkWell(
-                      onTap: () => {btnPressed(context)},
+                      onTap: () => onSubmit(context, verificationId),
                       splashColor: Colors.transparent,
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 330),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:snappio/services/auth_service.dart';
 
 class AuthScreen extends StatefulWidget {
   static const String routeName = "/auth";
@@ -15,11 +16,11 @@ class _AuthScreenState extends State<AuthScreen> {
   static String _phone = '';
   static bool _load = false;
 
-  void btnPressed(BuildContext context) {
+  void onSubmit(BuildContext context) {
     if (_formkey.currentState!.validate()) {
-      setState(() {
-        _load = !_load;
-      });
+      setState(() {_load = !_load;});
+      final phoneNumber = "+91${_phoneController.text.trim()}";
+      signInWithPhone(context, phoneNumber);
     }
   }
 
@@ -73,7 +74,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                     const SizedBox(height: 80),
                     InkWell(
-                      onTap: () => {btnPressed(context)},
+                      onTap: () => onSubmit(context),
                       splashColor: Colors.transparent,
                       child: AnimatedContainer(
                         duration: const Duration(milliseconds: 330),

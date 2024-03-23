@@ -1,45 +1,143 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snappio/screens/verification.dart';
+import 'package:snappio/utils/snackbar.dart';
 
-final FirebaseAuth _phoneAuth = FirebaseAuth.instance;
+class AuthServices {
 
-Future signInWithPhone(BuildContext context, String phoneNumber) async {
-  try {
-    _phoneAuth.verifyPhoneNumber(
-      phoneNumber: phoneNumber,
-      verificationCompleted: (PhoneAuthCredential credential) async {
-        await _phoneAuth.signInWithCredential(credential);
-      },
-      verificationFailed: (FirebaseAuthException err) {
-        throw Exception(err.message);
-      },
-      codeSent: (String verificationId, int? resendToken) async {
-        Navigator.pushNamed(context, '/verify',
-          arguments: VerificationArgs(verificationId: verificationId));
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {
-        log('Auto retrieval time out');
-      },
-    );
-  } on FirebaseAuthException catch (err) {
-    log(err.message.toString());
-  }
-}
+  final FirebaseAuth _phoneAuth = FirebaseAuth.instance;
+  final Dio _dio = Dio(BaseOptions(
+    baseUrl: "http://192.168.0.103:8000/api/v1",
+    validateStatus: (status) => status! < 500,
+  ));
 
-Future verifyOTP(BuildContext context, String verificationId, String otpCode) async {
-  try {
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(
-      verificationId: verificationId,
-      smsCode: otpCode,
-    );
-    User? user = (await _phoneAuth.signInWithCredential(credential)).user;
-    if (user != null) {
-      Navigator.pushNamed(context, '/signup');
+  Future<void> signInWithPhone(BuildContext context, String phoneNumber) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString("phn", phoneNumber);
+
+      await _phoneAuth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await _phoneAuth.signInWithCredential(credential);
+        },
+        verificationFailed: (FirebaseAuthException err) {
+          throw Exception(err.message);
+        },
+        codeSent: (String verificationId, int? resendToken) async {
+          Navigator.pushNamed(context, '/verify',
+            arguments: VerificationArgs(verificationId: verificationId));
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          log('Auto retrieval time out');
+        },
+      );
+    } on FirebaseAuthException catch (err) {
+      log(err.message.toString());
     }
-  } on FirebaseAuthException catch (err) {
-    log(err.message.toString());
+  }
+
+  Future<bool> verifyCredential(BuildContext context, String verificationId, String otpCode) async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: otpCode,
+      );
+      User? user = (await _phoneAuth.signInWithCredential(credential)).user;
+      if (user != null) {
+        return true;
+      } else { return false; }
+    } on FirebaseAuthException catch (err) {
+      log(err.message.toString());
+      return false;
+    }
+  }
+
+  Future<bool> userExists ({required BuildContext context}) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? phone = prefs.getString("phn");
+      Response response = await _dio.get(
+        "/user/find",
+        queryParameters: {"phone": phone},
+      );
+
+      if(response.statusCode! < 300){
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      log(err.toString());
+      return false;
+    }
+  }
+
+  Future<bool> signupUser ({
+    required BuildContext context,
+    required String username,
+    required String name,
+    required String email,
+  }) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? phone = prefs.getString("phn");
+
+      final data = {
+        "username": username,
+        "name":  name,
+        "phone": phone,
+        "email": email,
+      };
+
+      Response response = await _dio.post("/user/signup",
+        data: data,
+      );
+
+      if(response.statusCode! < 300){
+        return true;
+      } else {
+        showSnackBar(context, "Something went wrong!");
+        return false;
+      }
+    } catch (err) {
+      log(err.toString());
+      showSnackBar(context, "Server Error");
+      return false;
+    }
+  }
+
+  Future<bool> loginUser ({
+    required BuildContext context,
+  }) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? phone = prefs.getString("phn");
+
+      Response response = await _dio.post("/user/login",
+        data: {
+          "phone": phone,
+        },
+      );
+
+      if(response.statusCode! < 300){
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString("auth", response.data["token"]);
+        return true;
+        
+      }
+      else {
+        showSnackBar(context, "Something went wrong!");
+        return false;
+      }
+    } catch(err) {
+      log(err.toString());
+      showSnackBar(context, "Server Error");
+      return false;
+    }
   }
 }

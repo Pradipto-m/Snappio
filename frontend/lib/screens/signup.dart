@@ -1,4 +1,6 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:snappio/services/auth_service.dart';
 
 class SignupPage extends StatefulWidget {
   static const String routeName = "/signup";
@@ -23,11 +25,24 @@ class _SignupPageState extends State<SignupPage> {
     return RegExp(r"^([a-z0-9]{4,10}$)").hasMatch(_usernameController.text);
   }
 
-  void _submit(BuildContext context) {
+  void onSubmit(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _load = !_load;
-      });
+      setState(() {_load = !_load;});
+      try {
+        AuthServices().signupUser(
+          context: context,
+          username: _usernameController.text,
+          name: _nameController.text,
+          email: _emailController.text
+        ).then((value) {
+          AuthServices().loginUser(context: context).then((value) {
+            if(value) Navigator.pushNamed(context, "/home");
+          });
+        });
+      } catch (err) {
+        log(err.toString());
+        setState(() {_load = !_load;});
+      }
     }
   }
 
@@ -105,7 +120,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   const SizedBox(height: 55),
                   InkWell(
-                    onTap: () => _submit(context),
+                    onTap: () => onSubmit(context),
                     splashColor: Colors.transparent,
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 330),

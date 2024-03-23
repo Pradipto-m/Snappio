@@ -20,7 +20,7 @@ class _AuthScreenState extends State<AuthScreen> {
     if (_formkey.currentState!.validate()) {
       setState(() {_load = !_load;});
       final phoneNumber = "+91${_phoneController.text.trim()}";
-      signInWithPhone(context, phoneNumber);
+      AuthServices().signInWithPhone(context, phoneNumber);
     }
   }
 

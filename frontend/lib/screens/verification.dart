@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:snappio/services/auth_service.dart';
+import 'package:snappio/utils/snackbar.dart';
 
 class VerificationArgs {
   final String verificationId;
@@ -19,17 +20,37 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
 
   static bool _load = false;
-  static String _otp = "";
+  static String code1 = "";
+  static String code2 = "";
+  static String code3 = "";
+  static String code4 = "";
+  static String code5 = "";
+  static String code6 = "";
 
   void onSubmit(BuildContext context, String verificationId) {
+    final String otp = code1 + code2 + code3 + code4 + code5 + code6;
+    if (otp.length != 6) {
+      showSnackBar(context, "Incorrect OTP");
+      return;
+    }
+
     setState(() {_load = !_load;});
-    verifyOTP(context, verificationId, _otp).then((value) {
-      log("OTP verification successful");
-      setState(() {_load = !_load;});
-    }).catchError((err) {
+    try {
+      AuthServices().verifyCredential(context, verificationId, otp)
+      .then((val) {
+        AuthServices().userExists(context: context).then((value) {
+          if (!value) {
+            Navigator.pushNamed(context, '/signup');
+          } else {
+            AuthServices().loginUser(context: context);
+          }
+          setState(() {_load = !_load;});
+        });
+      });
+    } catch (err) {
       log(err.toString());
       setState(() {_load = !_load;});
-    });
+    }
   }
 
   @override
@@ -77,7 +98,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               ],
                               onChanged: (value) => {
                                 if (value.length == 1) {
-                                  _otp += value,
+                                  code1 = value,
                                   FocusScope.of(context).nextFocus(),
                                 }
                               },
@@ -102,7 +123,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               ],
                               onChanged: (value) => {
                                 if (value.length == 1) {
-                                  _otp += value,
+                                  code2 = value,
                                   FocusScope.of(context).nextFocus(),
                                 }
                               },
@@ -127,7 +148,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               ],
                               onChanged: (value) => {
                                 if (value.length == 1) {
-                                  _otp += value,
+                                  code3 = value,
                                   FocusScope.of(context).nextFocus(),
                                 }
                               },
@@ -152,7 +173,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               ],
                               onChanged: (value) => {
                                 if (value.length == 1) {
-                                  _otp += value,
+                                  code4 = value,
                                   FocusScope.of(context).nextFocus(),
                                 }
                               },
@@ -177,7 +198,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               ],
                               onChanged: (value) => {
                                 if (value.length == 1) {
-                                  _otp += value,
+                                  code5 = value,
                                   FocusScope.of(context).nextFocus(),
                                 }
                               },
@@ -202,7 +223,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               ],
                               onChanged: (value) => {
                                 if (value.length == 1) {
-                                  _otp += value,
+                                  code6 = value,
                                   FocusScope.of(context).nextFocus(),
                                 }
                               },

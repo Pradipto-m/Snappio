@@ -38,4 +38,18 @@ const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-export default {signupUser, loginUser};
+const checkPhoneNumber = async (req: Request, res: Response) => {
+  try {
+    const phone = req.query.phone;
+    const user = await User.findOne({ phone });
+    if (user) {
+      res.status(200).json({message: 'User exists'});
+    } else {
+      res.status(404).json({message: 'User does not exist'});
+    }
+  } catch (err) {
+    res.status(500).json({error: err});
+  }
+};
+
+export default {signupUser, loginUser, checkPhoneNumber};

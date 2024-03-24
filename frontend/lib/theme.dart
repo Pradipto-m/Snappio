@@ -101,7 +101,7 @@ class Themes {
         fontSize: 24.0
       ),
       bodySmall: const TextStyle(
-        color: darkBg,
+        color: lightBg,
         fontFamily: "Nunito",
         fontSize: 15.0
       ),

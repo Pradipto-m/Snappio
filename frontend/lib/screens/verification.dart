@@ -34,22 +34,34 @@ class _OtpScreenState extends State<OtpScreen> {
       return;
     }
 
-    setState(() {_load = !_load;});
+    setState(() {_load = true;});
     try {
       AuthServices().verifyCredential(context, verificationId, otp)
-      .then((val) {
+      .then((value) {
+        if (!value) {
+          showSnackBar(context, "Incorrect OTP");
+          setState(() {_load = false;});
+          return;
+        }
         AuthServices().userExists(context: context).then((value) {
           if (!value) {
-            Navigator.pushNamed(context, '/signup');
+            Navigator.pushReplacementNamed(context, "/signup");
           } else {
-            AuthServices().loginUser(context: context);
+            AuthServices().loginUser(context: context).then((value) {
+              if (value) {
+                Navigator.pushReplacementNamed(context, "/splash");
+              }
+              else {
+                showSnackBar(context, "Oops, something went wrong!");
+              }
+            });
           }
-          setState(() {_load = !_load;});
+          setState(() {_load = false;});
         });
       });
     } catch (err) {
       log(err.toString());
-      setState(() {_load = !_load;});
+      setState(() {_load = false;});
     }
   }
 

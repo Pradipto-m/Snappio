@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:snappio/screens/home.dart';
 import 'package:snappio/screens/registration.dart';
 import 'package:snappio/screens/signup.dart';
+import 'package:snappio/screens/splash.dart';
 import 'package:snappio/screens/verification.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
-    // case SplashScreen.routeName:
-    //   return MaterialPageRoute(
-    //     settings: routeSettings,
-    //     builder: (_) => const SplashScreen());
+    case SplashScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const SplashScreen());
     case AuthScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
@@ -17,8 +18,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case OtpScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const OtpScreen(),
-      );
+        builder: (_) => const OtpScreen());
     case SignupPage.routeName:
       return MaterialPageRoute(
         settings: routeSettings,

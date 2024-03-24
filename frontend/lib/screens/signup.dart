@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:snappio/services/auth_service.dart';
+import 'package:snappio/utils/snackbar.dart';
 
 class SignupPage extends StatefulWidget {
   static const String routeName = "/signup";
@@ -27,7 +28,7 @@ class _SignupPageState extends State<SignupPage> {
 
   void onSubmit(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      setState(() {_load = !_load;});
+      setState(() {_load = true;});
       try {
         AuthServices().signupUser(
           context: context,
@@ -36,14 +37,17 @@ class _SignupPageState extends State<SignupPage> {
           email: _emailController.text
         ).then((value) {
           AuthServices().loginUser(context: context).then((value) {
-            if(value) Navigator.pushNamed(context, "/home");
+            if(value) {Navigator.pushReplacementNamed(context, "/splash");}
+            else {showSnackBar(context, "Failed to signup user");}
           });
         });
       } catch (err) {
         log(err.toString());
-        setState(() {_load = !_load;});
+        showSnackBar(context, "Server Error");
+        setState(() {_load = false;});
       }
     }
+    setState(() {_load = false;});
   }
 
   @override

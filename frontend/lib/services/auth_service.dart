@@ -3,7 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:snappio/models/user_model.dart';
+import 'package:snappio/providers/user_provider.dart';
 import 'package:snappio/screens/verification.dart';
 import 'package:snappio/utils/snackbar.dart';
 
@@ -14,6 +17,33 @@ class AuthServices {
     baseUrl: "http://192.168.0.103:8000/api/v1",
     validateStatus: (status) => status! < 500,
   ));
+
+  Future<bool> userAuth(BuildContext context, WidgetRef ref) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString("auth");
+
+      if(token != null) {
+        Response response = await _dio.get("/user/auth",
+          options: Options(
+            headers: {"Authorization": "Bearer $token"},
+          ),
+        );
+
+        if(response.statusCode! < 300){
+          final UserModel user = UserModel.fromJson(response.data);
+          ref.read(userProvider.notifier).setUser(user);
+          return true;
+        } else {
+          showSnackBar(context, "Oops, Please Sign In Again!");
+          return false;
+        }
+      } else { return false; }
+    } catch (err) {
+      showSnackBar(context, "Server Error");
+      return false;
+    }
+  }
 
   Future<void> signInWithPhone(BuildContext context, String phoneNumber) async {
     try {
@@ -29,7 +59,7 @@ class AuthServices {
           throw Exception(err.message);
         },
         codeSent: (String verificationId, int? resendToken) async {
-          Navigator.pushNamed(context, '/verify',
+          Navigator.pushReplacementNamed(context, '/verify',
             arguments: VerificationArgs(verificationId: verificationId));
         },
         codeAutoRetrievalTimeout: (String verificationId) {
@@ -48,9 +78,11 @@ class AuthServices {
         smsCode: otpCode,
       );
       User? user = (await _phoneAuth.signInWithCredential(credential)).user;
+
       if (user != null) {
         return true;
       } else { return false; }
+
     } on FirebaseAuthException catch (err) {
       log(err.message.toString());
       return false;
@@ -117,18 +149,13 @@ class AuthServices {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? phone = prefs.getString("phn");
-
       Response response = await _dio.post("/user/login",
-        data: {
-          "phone": phone,
-        },
+        data: {"phone": phone},
       );
 
       if(response.statusCode! < 300){
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString("auth", response.data["token"]);
         return true;
-        
       }
       else {
         showSnackBar(context, "Something went wrong!");

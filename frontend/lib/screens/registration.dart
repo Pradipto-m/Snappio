@@ -16,12 +16,13 @@ class _AuthScreenState extends State<AuthScreen> {
   static String _phone = '';
   static bool _load = false;
 
-  void onSubmit(BuildContext context) {
+  void onSubmit(BuildContext context) async {
     if (_formkey.currentState!.validate()) {
-      setState(() {_load = !_load;});
+      setState(() {_load = true;});
       final phoneNumber = "+91${_phoneController.text.trim()}";
-      AuthServices().signInWithPhone(context, phoneNumber);
+      await AuthServices().signInWithPhone(context, phoneNumber);
     }
+    setState(() {_load = false;});
   }
 
   @override

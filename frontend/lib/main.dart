@@ -1,12 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:snappio/router.dart';
 import 'package:snappio/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp()
+    ));
 }
 
 class MyApp extends StatefulWidget {
@@ -31,7 +35,7 @@ class _MyAppState extends State<MyApp> {
       darkTheme: Themes.darkMode(context),
       title: "Snappio",
       onGenerateRoute: (settings) => generateRoute(settings),
-      initialRoute: '/auth',
+      initialRoute: '/splash',
     );
   }
 }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:snappio/screens/home.dart';
-import 'package:snappio/screens/registration.dart';
-import 'package:snappio/screens/signup.dart';
-import 'package:snappio/screens/splash.dart';
-import 'package:snappio/screens/verification.dart';
+import 'package:snappio/screens/upload.dart';
+import 'package:snappio/widgets/navigation.dart';
+import 'package:snappio/screens/auth/registration.dart';
+import 'package:snappio/screens/auth/signup.dart';
+import 'package:snappio/screens/auth/splash.dart';
+import 'package:snappio/screens/auth/verification.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -23,12 +24,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const SignupPage());
-    case HomePage.routeName:
+    case NavBar.routeName:
       return MaterialPageRoute(
-          settings: routeSettings, builder: (_) => const HomePage());
-    // case BottomNavBar.routeName:
-    //   return MaterialPageRoute(
-    //       settings: routeSettings, builder: (_) => const BottomNavBar());
+          settings: routeSettings, builder: (_) => const NavBar());
+    case UploadPosts.routeName:
+      return MaterialPageRoute(
+          settings: routeSettings, builder: (_) => const UploadPosts());
     default:
       return MaterialPageRoute(
         settings: routeSettings,

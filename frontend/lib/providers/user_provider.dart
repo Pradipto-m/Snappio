@@ -13,6 +13,11 @@ final initialUser = UserModel(
 class UserNotifier extends StateNotifier<UserModel> {
   UserNotifier() : super(initialUser);
 
+  get name => state.name;
+  get username => state.username;
+  get email => state.email;
+  get phone => state.phone;
+
   void setUser(UserModel user) {
     state = user;
   }

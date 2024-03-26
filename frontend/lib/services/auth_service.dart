@@ -7,8 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snappio/models/user_model.dart';
 import 'package:snappio/providers/user_provider.dart';
-import 'package:snappio/screens/verification.dart';
-import 'package:snappio/utils/snackbar.dart';
+import 'package:snappio/screens/auth/verification.dart';
+import 'package:snappio/widgets/snackbar.dart';
 
 class AuthServices {
 

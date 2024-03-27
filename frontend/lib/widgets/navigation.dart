@@ -57,12 +57,12 @@ class _NavBarState extends State<NavBar> {
           NavigationDestination(
             icon: Icon(
               Ionicons.image_outline,
-              size: 34,
+              size: 35,
               color: Theme.of(context).iconTheme.color,
             ),
             selectedIcon: Icon(
               Ionicons.images,
-              size: 34,
+              size: 35,
               color: Theme.of(context).primaryIconTheme.color,
             ),
             label: 'Posts',
@@ -70,12 +70,12 @@ class _NavBarState extends State<NavBar> {
           NavigationDestination(
             icon: Icon(
               Ionicons.chatbubble_outline,
-              size: 34,
+              size: 35,
               color: Theme.of(context).iconTheme.color,
             ),
             selectedIcon: Icon(
               Ionicons.chatbubble_ellipses,
-              size: 34,
+              size: 35,
               color: Theme.of(context).primaryIconTheme.color,
             ),
             label: 'Chats',
@@ -84,12 +84,12 @@ class _NavBarState extends State<NavBar> {
           NavigationDestination(
             icon: Icon(
               Ionicons.search,
-              size: 34,
+              size: 35,
               color: Theme.of(context).iconTheme.color,
             ),
             selectedIcon: Icon(
               Ionicons.at,
-              size: 34,
+              size: 35,
               color: Theme.of(context).primaryIconTheme.color,
             ),
             label: 'Search',
@@ -97,12 +97,12 @@ class _NavBarState extends State<NavBar> {
           NavigationDestination(
             icon: Icon(
               Ionicons.person_circle_outline,
-              size: 34,
+              size: 35,
               color: Theme.of(context).iconTheme.color,
             ),
             selectedIcon: Icon(
               Ionicons.person,
-              size: 34,
+              size: 35,
               color: Theme.of(context).primaryIconTheme.color,
             ),
             label: 'Profile',
@@ -125,7 +125,7 @@ class _NavBarState extends State<NavBar> {
           backgroundColor: Theme.of(context).cardColor,
           shape: const CircleBorder(eccentricity: 1),
           child: Icon(Ionicons.add,
-            size: 36,
+            size: 37,
             color: Theme.of(context).primaryIconTheme.color,
           ),
         ),

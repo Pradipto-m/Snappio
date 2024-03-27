@@ -16,14 +16,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    AuthServices().userAuth(context, ref).then((user) {
-      if(!user){
-        Future.delayed(const Duration(milliseconds: 1200), () {
-          Navigator.pushReplacementNamed(context, '/auth');
+
+    AuthServices().onboarded(context).then((val) {
+      if(!val){
+        Future.delayed(const Duration(seconds: 1), () {
+          Navigator.pushReplacementNamed(context, '/onboard');
         });
       } else {
-        Future.delayed(const Duration(milliseconds: 1200), () {
-          Navigator.pushReplacementNamed(context, '/navigation');
+        AuthServices().userAuth(context, ref).then((user) {
+          if(!user){
+            Future.delayed(const Duration(milliseconds: 1200), () {
+              Navigator.pushReplacementNamed(context, '/auth');
+            });
+          } else {
+            Future.delayed(const Duration(milliseconds: 1200), () {
+              Navigator.pushReplacementNamed(context, '/navigation');
+            });
+          }
         });
       }
     });

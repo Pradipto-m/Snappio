@@ -18,6 +18,19 @@ class AuthServices {
     validateStatus: (status) => status! < 500,
   ));
 
+  Future<bool> onboarded(BuildContext context, {bool onboarding = false}) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey("onboard")) {
+      return true;
+    } else {
+      if (onboarding) {
+        prefs.setBool("onboard", true);
+        Navigator.pushReplacementNamed(context, "/auth");
+        return true;
+      } else {return false;}
+    }
+  }
+  
   Future<bool> userAuth(BuildContext context, WidgetRef ref) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();

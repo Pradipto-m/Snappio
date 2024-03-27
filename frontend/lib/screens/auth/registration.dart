@@ -22,7 +22,9 @@ class _AuthScreenState extends State<AuthScreen> {
       final phoneNumber = "+91${_phoneController.text.trim()}";
       await AuthServices().signInWithPhone(context, phoneNumber);
     }
-    setState(() {_load = false;});
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      setState(() {_load = false;});
+    });
   }
 
   @override
@@ -50,6 +52,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         controller: _phoneController,
                         decoration: InputDecoration(
                           labelText: "Enter mobile number",
+                          labelStyle: Theme.of(context).textTheme.bodySmall,
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(30))),
                           contentPadding: const EdgeInsets.symmetric(
@@ -86,7 +89,8 @@ class _AuthScreenState extends State<AuthScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
                           color: Theme.of(context).cardColor),
-                        child: _load ? const CircularProgressIndicator()
+                        child: _load
+                          ? CircularProgressIndicator(color: Theme.of(context).highlightColor)
                           : Text("Send OTP", style: Theme.of(context).textTheme.labelLarge))),
                   ],
                 ),

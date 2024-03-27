@@ -55,6 +55,7 @@ class Themes {
     ),
     canvasColor: lightBg,
     cardColor: lightAccent,
+    highlightColor: darkBg,
   );
 
   static ThemeData darkMode(BuildContext context) => ThemeData().copyWith(
@@ -112,6 +113,7 @@ class Themes {
     ),
     canvasColor: darkBg,
     cardColor: darkAccent,
+    highlightColor: lightBg,
   );
 
   // colors

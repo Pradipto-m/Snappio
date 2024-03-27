@@ -5,9 +5,14 @@ import 'package:snappio/screens/auth/registration.dart';
 import 'package:snappio/screens/auth/signup.dart';
 import 'package:snappio/screens/auth/splash.dart';
 import 'package:snappio/screens/auth/verification.dart';
+import 'package:snappio/widgets/onboarding.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
+    case Onboard.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const Onboard());
     case SplashScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
@@ -26,10 +31,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const SignupPage());
     case NavBar.routeName:
       return MaterialPageRoute(
-          settings: routeSettings, builder: (_) => const NavBar());
+          settings: routeSettings,
+          builder: (_) => const NavBar());
     case UploadPosts.routeName:
       return MaterialPageRoute(
-          settings: routeSettings, builder: (_) => const UploadPosts());
+          settings: routeSettings,
+          builder: (_) => const UploadPosts());
     default:
       return MaterialPageRoute(
         settings: routeSettings,

@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:lottie/lottie.dart';
 import 'package:snappio/services/auth_service.dart';
 import 'package:snappio/widgets/snackbar.dart';
 
@@ -17,6 +19,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   static bool _load = false;
+  static bool _success = false;
 
   bool validEmail() {
     return RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
@@ -37,7 +40,11 @@ class _SignupPageState extends State<SignupPage> {
           email: _emailController.text
         ).then((value) {
           AuthServices().loginUser(context: context).then((value) {
-            if(value) {Navigator.pushReplacementNamed(context, "/splash");}
+            if(value) {
+              setState(() => _success = true);
+              Future.delayed(const Duration(seconds: 2), () =>
+                Navigator.pushReplacementNamed(context, "/splash"));
+            }
             else {showSnackBar(context, "Failed to signup user");}
           });
         });
@@ -47,7 +54,10 @@ class _SignupPageState extends State<SignupPage> {
         setState(() {_load = false;});
       }
     }
-    setState(() {_load = false;});
+    setState(() {
+      _success = false;
+      _load = false;
+    });
   }
 
   @override
@@ -73,12 +83,14 @@ class _SignupPageState extends State<SignupPage> {
                     child: Column(children: [
                       TextFormField(
                         controller: _nameController,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.account_box_outlined),
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Ionicons.person_circle_outline),
+                          prefixIconColor: Theme.of(context).primaryIconTheme.color,
                           labelText: "Name",
-                          border: OutlineInputBorder(
+                          labelStyle: Theme.of(context).textTheme.bodySmall,
+                          border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(25))),
-                          contentPadding: EdgeInsets.all(17)),
+                          contentPadding: const EdgeInsets.all(17)),
                         style: Theme.of(context).textTheme.bodySmall,
                         validator: (value) {
                           if (value!.isEmpty) return "Please provide your name";
@@ -88,12 +100,14 @@ class _SignupPageState extends State<SignupPage> {
                       const SizedBox(height: 21),
                       TextFormField(
                         controller: _usernameController,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.account_circle_rounded),
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Ionicons.at),
+                          prefixIconColor: Theme.of(context).primaryIconTheme.color,
                           labelText: "Username",
-                          border: OutlineInputBorder(
+                          labelStyle: Theme.of(context).textTheme.bodySmall,
+                          border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(25))),
-                          contentPadding: EdgeInsets.all(17)),
+                          contentPadding: const EdgeInsets.all(17)),
                         style: Theme.of(context).textTheme.bodySmall,
                         validator: (value) {
                           if (value!.length < 4 || value.length > 10) {
@@ -107,13 +121,14 @@ class _SignupPageState extends State<SignupPage> {
                       const SizedBox(height: 21),
                       TextFormField(
                         controller: _emailController,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.email_rounded),
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Ionicons.mail_outline),
+                          prefixIconColor: Theme.of(context).primaryIconTheme.color,
                           labelText: "Email",
-                          border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(25))),
-                          contentPadding: EdgeInsets.all(17)),
+                          labelStyle: Theme.of(context).textTheme.bodySmall,
+                          border: const OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(25))),
+                          contentPadding: const EdgeInsets.all(17)),
                         keyboardType: TextInputType.emailAddress,
                         style: Theme.of(context).textTheme.bodySmall,
                         validator: (value) {
@@ -122,7 +137,11 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                     ]),
                   ),
-                  const SizedBox(height: 55),
+                  SizedBox(height: _success ? 10 : 55),
+                  _success ? SizedBox(
+                    width: 210,
+                    child: Lottie.asset("assets/images/success.json"),
+                  ) :
                   InkWell(
                     onTap: () => onSubmit(context),
                     splashColor: Colors.transparent,
@@ -136,7 +155,7 @@ class _SignupPageState extends State<SignupPage> {
                           borderRadius: BorderRadius.circular(30)),
                         color: Theme.of(context).cardColor),
                       child: _load
-                          ? const CircularProgressIndicator()
+                          ? CircularProgressIndicator(color: Theme.of(context).highlightColor)
                           : Text("Signup", style: Theme.of(context).textTheme.labelLarge))
                     ),
                   const SizedBox(height: 20),

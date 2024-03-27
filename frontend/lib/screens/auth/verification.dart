@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:snappio/services/auth_service.dart';
 import 'package:snappio/widgets/snackbar.dart';
 
@@ -20,6 +21,7 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
 
   static bool _load = false;
+  static bool? _error;
   static String code1 = "";
   static String code2 = "";
   static String code3 = "";
@@ -33,36 +35,50 @@ class _OtpScreenState extends State<OtpScreen> {
       showSnackBar(context, "Incorrect OTP");
       return;
     }
-
-    setState(() {_load = true;});
     try {
+      setState(() => _load = true);
       AuthServices().verifyCredential(context, verificationId, otp)
       .then((value) {
         if (!value) {
+          setState(() {
+            _error = true;
+            _load = true;
+          });
           showSnackBar(context, "Incorrect OTP");
-          setState(() {_load = false;});
+          Future.delayed(const Duration(milliseconds: 1500), () {
+            setState(() {
+              _error = null;
+              _load = false;
+            });
+          });
           return;
         }
         AuthServices().userExists(context: context).then((value) {
           if (!value) {
-            Navigator.pushReplacementNamed(context, "/signup");
+            setState(() {
+              _error = false;
+              _load = true;
+            });
+            Future.delayed(const Duration(milliseconds: 1500), () =>
+              Navigator.pushReplacementNamed(context, "/signup"));
           } else {
             AuthServices().loginUser(context: context).then((value) {
               if (value) {
-                Navigator.pushReplacementNamed(context, "/splash");
+                setState(() {
+                  _error = false;
+                  _load = true;
+                });
+                Future.delayed(const Duration(milliseconds: 1500), () =>
+                  Navigator.pushReplacementNamed(context, "/splash"));
               }
               else {
                 showSnackBar(context, "Oops, something went wrong!");
               }
             });
           }
-          setState(() {_load = false;});
         });
       });
-    } catch (err) {
-      log(err.toString());
-      setState(() {_load = false;});
-    }
+    } catch (err) { log(err.toString()); }
   }
 
   @override
@@ -257,9 +273,15 @@ class _OtpScreenState extends State<OtpScreen> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
                           color: Theme.of(context).cardColor),
-                          child: _load
-                              ? const CircularProgressIndicator()
-                              : Text("Verify", style: Theme.of(context).textTheme.labelLarge))
+                        child: _error == null ? _load
+                          ? CircularProgressIndicator(color: Theme.of(context).highlightColor)
+                          : Text("Verify", style: Theme.of(context).textTheme.labelLarge)
+                          : _error! ?
+                          Icon(Ionicons.close_circle_outline, size: 40,
+                            color: Theme.of(context).primaryIconTheme.color) :
+                          Icon(Ionicons.checkmark_circle_outline, size: 40,
+                            color: Theme.of(context).primaryIconTheme.color)
+                      ),
                     ),
                   ],
                 )),

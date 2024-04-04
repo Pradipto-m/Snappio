@@ -28,15 +28,18 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, 'Email is required'],
-    unique: true,
     trim: true,
     validate: {
       validator: (value: string) => {
         return /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(value);
       },
-      message: props => `${props.value} is not a valid email address!`
+      message: props => `${props.value} is not valid!`
     }
   },
+  avatar: {
+    type: String,
+    default: '',
+  }
 });
 
 const User = mongoose.model('User', userSchema);

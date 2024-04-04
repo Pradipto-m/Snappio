@@ -1,10 +1,16 @@
 import {Request, Response} from 'express';
+import { v2 as cloudinary } from 'cloudinary';
 import jwt from 'jsonwebtoken';
+import dataUriParser from 'datauri/parser';
+import path from 'path';
 import User from '../Models/userModel';
 
 const signupUser = async (req: Request, res: Response) => {
   try {
     const {username, name, phone, email} = req.body;
+    if (await User.findOne({username: username})) {
+      return res.status(400).json({error: 'Username already exists!'});
+    }
 
     const user = await User.create({
       username,
@@ -38,7 +44,7 @@ const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-const checkPhoneNumber = async (req: Request, res: Response) => {
+const checkPhone = async (req: Request, res: Response) => {
   try {
     const phone = req.query.phone;
     const user = await User.findOne({ phone });
@@ -64,4 +70,35 @@ const getUser = async (req: Request, res: Response) => {
   }
 };
 
-export default {signupUser, loginUser, checkPhoneNumber, getUser};
+const uploadAvatar = async (req: Request, res: Response) => {
+  try {
+    const user = await User.findById(req.body.userId);
+    if (!user) {
+      return res.status(400).json({error: 'Authorisation Denied!'});
+    }
+    if (!req.file || !req.file.buffer) {
+      return res.status(400).json({error: 'File data missing.'});
+    }
+
+    const parser = new dataUriParser();
+    const extName = path.extname(req.file.originalname).toString();
+    const image = parser.format(extName, req.file.buffer).content!;
+
+    const upload = await cloudinary.uploader.upload(
+      image,
+      {resource_type: 'image',
+      public_id: `Snappio/users/${user._id}_${user.username}`,
+      overwrite: true}
+    );
+
+    user.avatar = upload.secure_url;
+    await user.save().then(() => {
+      res.status(200).json({user});
+    });
+
+  } catch (err) {
+    res.status(500).json({err});
+  }
+};
+
+export default {signupUser, loginUser, checkPhone, getUser, uploadAvatar};

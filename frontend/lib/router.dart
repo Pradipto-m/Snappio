@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:snappio/screens/upload.dart';
 import 'package:snappio/widgets/navigation.dart';
 import 'package:snappio/screens/auth/registration.dart';
 import 'package:snappio/screens/auth/signup.dart';
@@ -33,10 +32,6 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
           settings: routeSettings,
           builder: (_) => const NavBar());
-    case UploadPosts.routeName:
-      return MaterialPageRoute(
-          settings: routeSettings,
-          builder: (_) => const UploadPosts());
     default:
       return MaterialPageRoute(
         settings: routeSettings,

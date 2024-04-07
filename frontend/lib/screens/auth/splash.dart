@@ -45,7 +45,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 100),
+          const Expanded(child: SizedBox()),
           Image.asset("assets/images/logo.png",
             height: 180, width: double.infinity),
           const SizedBox(height: 100),
@@ -53,6 +53,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             color: Colors.orange.shade400,
             size: 80
           ),
+          const SizedBox(height: 200),
+          const Text("Made with  ❤️  by Pro", style: TextStyle(color: Colors.white)),
+          const SizedBox(height: 20),
         ],
       ),
     );

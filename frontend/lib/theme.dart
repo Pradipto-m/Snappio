@@ -14,20 +14,20 @@ class Themes {
       )
     ),
     primaryIconTheme: ThemeData().iconTheme.copyWith(
-      color: darkBg
-    ),
-    iconTheme: const IconThemeData().copyWith(
       color: const Color.fromRGBO(0, 0, 0, 0.55),
     ),
-    navigationBarTheme: const NavigationBarThemeData().copyWith(
-      backgroundColor: lightAccent,
-      elevation: 0,
-      height: 75,
-      indicatorColor: const Color.fromRGBO(255, 255, 255, 0.25),
-      indicatorShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(100)),
-      labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+    iconTheme: const IconThemeData().copyWith(
+      color: darkBg,
     ),
+    // navigationBarTheme: const NavigationBarThemeData().copyWith(
+    //   backgroundColor: lightAccent,
+    //   elevation: 0,
+    //   height: 75,
+    //   indicatorColor: const Color.fromRGBO(255, 255, 255, 0.25),
+    //   indicatorShape: RoundedRectangleBorder(
+    //     borderRadius: BorderRadius.circular(100)),
+    //   labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+    // ),
     textTheme: ThemeData().textTheme.copyWith(
       titleLarge: const TextStyle(
         color: darkBg,
@@ -52,6 +52,10 @@ class Themes {
         fontFamily: "Nunito",
         fontSize: 15.0
       )
+    ),
+    cardTheme: ThemeData().cardTheme.copyWith(
+      color: lightBg,
+      elevation: 0,
     ),
     canvasColor: lightBg,
     cardColor: lightAccent,
@@ -72,20 +76,20 @@ class Themes {
       )
     ),
     primaryIconTheme: ThemeData().iconTheme.copyWith(
-      color: lightBg,
-    ),
-    iconTheme: const IconThemeData().copyWith(
       color: const Color.fromRGBO(255, 255, 255, 0.55),
     ),
-    navigationBarTheme: const NavigationBarThemeData().copyWith(
-      backgroundColor: darkAccent,
-      elevation: 0,
-      height: 75,
-      indicatorColor: const Color.fromRGBO(0, 0, 0, 0.1),
-      indicatorShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(100)),
-      labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+    iconTheme: ThemeData().iconTheme.copyWith(
+      color: lightBg,
     ),
+    // navigationBarTheme: const NavigationBarThemeData().copyWith(
+    //   backgroundColor: darkAccent,
+    //   elevation: 0,
+    //   height: 75,
+    //   indicatorColor: const Color.fromRGBO(0, 0, 0, 0.1),
+    //   indicatorShape: RoundedRectangleBorder(
+    //     borderRadius: BorderRadius.circular(100)),
+    //   labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+    // ),
     textTheme: ThemeData().textTheme.copyWith(
       titleLarge: const TextStyle(
         color: lightBg,
@@ -111,14 +115,19 @@ class Themes {
         fontSize: 15.0
       )
     ),
+    cardTheme: ThemeData().cardTheme.copyWith(
+      color: darkBg,
+      elevation: 0,
+    ),
     canvasColor: darkBg,
     cardColor: darkAccent,
-    highlightColor: lightBg,
+    highlightColor: lightContrast,
   );
 
   // colors
-  static const Color lightBg = Color(0xffd7e1f5);
+  static const Color lightBg = Color(0xffd1e1f5);
   static const Color lightAccent = Color(0xff2ccea5);
   static const Color darkBg = Color(0xff0f0f2a);
   static const Color darkAccent = Color(0xff7563f6);
+  static const Color lightContrast = Color.fromARGB(255, 231, 238, 255);
 }

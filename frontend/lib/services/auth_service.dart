@@ -14,7 +14,7 @@ class AuthServices {
 
   final FirebaseAuth _phoneAuth = FirebaseAuth.instance;
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: "http://192.168.0.103:8000/api/v1",
+    baseUrl: "http://192.168.0.103:3000/api/v1",
     validateStatus: (status) => status! < 500,
   ));
 
@@ -146,7 +146,9 @@ class AuthServices {
       if(response.statusCode! < 300){
         return true;
       } else {
-        showSnackBar(context, "Something went wrong!");
+        response.statusCode == 400
+        ? showSnackBar(context, "Username already exists")
+        : showSnackBar(context, "Something went wrong!");
         return false;
       }
     } catch (err) {

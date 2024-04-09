@@ -54,7 +54,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             size: 80
           ),
           const SizedBox(height: 200),
-          const Text("Made with  ❤️  by Pro", style: TextStyle(color: Colors.white)),
+          Text("Made with  ❤️  by Pro", style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: 20),
         ],
       ),

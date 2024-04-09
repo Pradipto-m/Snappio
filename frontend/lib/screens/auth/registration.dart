@@ -52,17 +52,17 @@ class _AuthScreenState extends State<AuthScreen> {
                         controller: _phoneController,
                         decoration: InputDecoration(
                           labelText: "Enter mobile number",
-                          labelStyle: Theme.of(context).textTheme.bodySmall,
+                          labelStyle: Theme.of(context).textTheme.bodyMedium,
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(30))),
                           contentPadding: const EdgeInsets.symmetric(
                               vertical: 17, horizontal: 17),
                           prefix: Text("+91  ",
-                              style: Theme.of(context).textTheme.bodySmall),
+                              style: Theme.of(context).textTheme.bodyMedium),
                           suffixIcon: _phone.length == 10 ? const Icon(Icons.check_circle_outline_rounded) : null,
                           suffixIconColor: Colors.green),
                         keyboardType: TextInputType.phone,
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context).textTheme.bodyMedium,
                         onChanged: (value) => {
                           setState(() {
                             _phone = value;

@@ -85,13 +85,13 @@ class _SignupPageState extends State<SignupPage> {
                         controller: _nameController,
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Ionicons.person_circle_outline),
-                          prefixIconColor: Theme.of(context).primaryIconTheme.color,
+                          prefixIconColor: Theme.of(context).iconTheme.color,
                           labelText: "Name",
-                          labelStyle: Theme.of(context).textTheme.bodySmall,
+                          labelStyle: Theme.of(context).textTheme.bodyMedium,
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(25))),
                           contentPadding: const EdgeInsets.all(17)),
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context).textTheme.bodyMedium,
                         validator: (value) {
                           if (value!.isEmpty) return "Please provide your name";
                           return null;
@@ -102,13 +102,13 @@ class _SignupPageState extends State<SignupPage> {
                         controller: _usernameController,
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Ionicons.at),
-                          prefixIconColor: Theme.of(context).primaryIconTheme.color,
+                          prefixIconColor: Theme.of(context).iconTheme.color,
                           labelText: "Username",
-                          labelStyle: Theme.of(context).textTheme.bodySmall,
+                          labelStyle: Theme.of(context).textTheme.bodyMedium,
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(25))),
                           contentPadding: const EdgeInsets.all(17)),
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context).textTheme.bodyMedium,
                         validator: (value) {
                           if (value!.length < 4 || value.length > 10) {
                             return "Username should be 4-10 characters long";
@@ -123,14 +123,14 @@ class _SignupPageState extends State<SignupPage> {
                         controller: _emailController,
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Ionicons.mail_outline),
-                          prefixIconColor: Theme.of(context).primaryIconTheme.color,
+                          prefixIconColor: Theme.of(context).iconTheme.color,
                           labelText: "Email",
-                          labelStyle: Theme.of(context).textTheme.bodySmall,
+                          labelStyle: Theme.of(context).textTheme.bodyMedium,
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(25))),
                           contentPadding: const EdgeInsets.all(17)),
                         keyboardType: TextInputType.emailAddress,
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context).textTheme.bodyMedium,
                         validator: (value) {
                           return validEmail() ? null : "Invalid email";
                         },

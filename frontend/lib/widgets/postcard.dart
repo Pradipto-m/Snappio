@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:like_button/like_button.dart';
+import 'package:snappio/services/posts_service.dart';
 
 class PostCard extends StatefulWidget {
+  final String id;
   final String user;
   final String imageUrl;
-  final String date;
   final String caption;
+  final String date;
+  final int likes;
+  final bool loved;
 
   const PostCard({
     super.key,
+    required this.id,
     required this.user,
     required this.imageUrl,
+    required this.caption,
     required this.date,
-    required this.caption
+    required this.likes,
+    required this.loved,
   });
   
 
@@ -22,21 +30,30 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
+
   late String date =
     DateFormat("yyyy-MM-dd").format(DateTime.parse(widget.date)) ==
       DateFormat("yyyy-MM-dd").format(DateTime.timestamp())
         ? "Today"
         : DateFormat("yyyy-MM-dd").format(DateTime.parse(widget.date));
 
+  Future<bool> lovePost (bool loved) async {
+    final PostsService postsService = PostsService();
+    final res = await postsService.lovePost(context, widget.id);
+    return loved ? !res : res;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Column(children: [
+        const SizedBox(height: 9),
         ListTile(
           leading: const CircleAvatar(
-              backgroundImage: AssetImage('assets/images/avatar.png')),
-          title: Text(widget.user),
-          trailing: Text(date),
+            backgroundImage: AssetImage('assets/images/avatar.png'),
+            radius: 19,),
+          title: Text(widget.user, style: Theme.of(context).textTheme.bodyMedium),
+          trailing: Text(date, style: Theme.of(context).textTheme.bodySmall),
         ),
         ClipRRect(
           borderRadius: BorderRadius.circular(20),
@@ -49,13 +66,14 @@ class _PostCardState extends State<PostCard> {
             ),
         )),
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(14),
           child: Row(children: [
             Expanded(
-              child: Text(widget.caption)
+              child: Text(widget.caption, style: Theme.of(context).textTheme.bodySmall)
             ),
             LikeButton(
-              size: 32,
+              padding: const EdgeInsets.only(left: 10),
+              size: 30,
               circleColor: CircleColor(
                 start: Colors.red.shade100,
                 end: Colors.red.shade400
@@ -64,15 +82,18 @@ class _PostCardState extends State<PostCard> {
                 dotPrimaryColor: Colors.red.shade400,
                 dotSecondaryColor: Colors.red.shade400
               ),
+              isLiked: widget.loved,
+              onTap: (bool isLiked) => lovePost(isLiked),
               likeBuilder: (bool isLiked) {
                 return Icon(
-                  Icons.favorite,
-                  color: isLiked ? Colors.red : Colors.grey,
-                  size: 32,
+                  isLiked ? Ionicons.heart : Ionicons.heart_outline,
+                  color: isLiked ? Colors.red[400] : Theme.of(context).iconTheme.color,
+                  size: 30,
                 );
               },
-              likeCount: 150,
+              likeCount: widget.likes,
               animationDuration: const Duration(milliseconds: 1250),
+              likeCountAnimationDuration: const Duration(milliseconds: 1200),
             ),
           ]),
         ),

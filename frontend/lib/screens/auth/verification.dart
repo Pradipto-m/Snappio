@@ -119,7 +119,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               ),
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.bodySmall,
+                              style: Theme.of(context).textTheme.bodyMedium,
                               inputFormatters: [
                                 LengthLimitingTextInputFormatter(1),
                                 FilteringTextInputFormatter.digitsOnly,
@@ -144,7 +144,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               ),
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.bodySmall,
+                              style: Theme.of(context).textTheme.bodyMedium,
                               inputFormatters: [
                                 LengthLimitingTextInputFormatter(1),
                                 FilteringTextInputFormatter.digitsOnly,
@@ -169,7 +169,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               ),
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.bodySmall,
+                              style: Theme.of(context).textTheme.bodyMedium,
                               inputFormatters: [
                                 LengthLimitingTextInputFormatter(1),
                                 FilteringTextInputFormatter.digitsOnly,
@@ -194,7 +194,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               ),
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.bodySmall,
+                              style: Theme.of(context).textTheme.bodyMedium,
                               inputFormatters: [
                                 LengthLimitingTextInputFormatter(1),
                                 FilteringTextInputFormatter.digitsOnly,
@@ -219,7 +219,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               ),
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.bodySmall,
+                              style: Theme.of(context).textTheme.bodyMedium,
                               inputFormatters: [
                                 LengthLimitingTextInputFormatter(1),
                                 FilteringTextInputFormatter.digitsOnly,
@@ -244,7 +244,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               ),
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.bodySmall,
+                              style: Theme.of(context).textTheme.bodyMedium,
                               inputFormatters: [
                                 LengthLimitingTextInputFormatter(1),
                                 FilteringTextInputFormatter.digitsOnly,
@@ -278,9 +278,9 @@ class _OtpScreenState extends State<OtpScreen> {
                           : Text("Verify", style: Theme.of(context).textTheme.labelLarge)
                           : _error! ?
                           Icon(Ionicons.close_circle_outline, size: 40,
-                            color: Theme.of(context).primaryIconTheme.color) :
+                            color: Theme.of(context).iconTheme.color) :
                           Icon(Ionicons.checkmark_circle_outline, size: 40,
-                            color: Theme.of(context).primaryIconTheme.color)
+                            color: Theme.of(context).iconTheme.color)
                       ),
                     ),
                   ],

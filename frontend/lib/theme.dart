@@ -41,16 +41,21 @@ class Themes {
         fontWeight: FontWeight.bold,
         fontSize: 24.0
       ),
-      bodySmall: const TextStyle(
+      bodyMedium: const TextStyle(
         fontFamily: "Nunito",
         color: darkBg,
         fontWeight: FontWeight.bold,
-        fontSize: 18.0
+        fontSize: 18.4,
+      ),
+      bodySmall: const TextStyle(
+        fontFamily: "Nunito",
+        color: darkBg,
+        fontSize: 16.7,
       ),
       displaySmall: const TextStyle(
         color: lightBg,
         fontFamily: "Nunito",
-        fontSize: 15.0
+        fontSize: 16.0,
       )
     ),
     cardTheme: ThemeData().cardTheme.copyWith(
@@ -61,6 +66,7 @@ class Themes {
     cardColor: lightAccent,
     highlightColor: darkBg,
   );
+
 
   static ThemeData darkMode(BuildContext context) => ThemeData().copyWith(
     brightness: Brightness.dark,
@@ -79,7 +85,7 @@ class Themes {
       color: const Color.fromRGBO(255, 255, 255, 0.55),
     ),
     iconTheme: ThemeData().iconTheme.copyWith(
-      color: lightBg,
+      color: lightContrast,
     ),
     // navigationBarTheme: const NavigationBarThemeData().copyWith(
     //   backgroundColor: darkAccent,
@@ -92,27 +98,32 @@ class Themes {
     // ),
     textTheme: ThemeData().textTheme.copyWith(
       titleLarge: const TextStyle(
-        color: lightBg,
+        color: lightContrast,
         fontFamily: "Nunito",
         fontWeight: FontWeight.bold,
         fontSize: 34.0
       ),
       labelLarge: const TextStyle(
-        color: lightBg,
+        color: lightContrast,
         fontFamily: "Nunito",
         fontWeight: FontWeight.bold,
         fontSize: 24.0
       ),
+      bodyMedium: const TextStyle(
+        fontFamily: "Nunito",
+        color: lightContrast,
+        fontWeight: FontWeight.bold,
+        fontSize: 18.4,
+      ),
       bodySmall: const TextStyle(
         fontFamily: "Nunito",
-        color: lightBg,
-        fontWeight: FontWeight.bold,
-        fontSize: 18.0
+        color: lightContrast,
+        fontSize: 16.7,
       ),
       displaySmall: const TextStyle(
         color: darkBg,
         fontFamily: "Nunito",
-        fontSize: 15.0
+        fontSize: 16.0,
       )
     ),
     cardTheme: ThemeData().cardTheme.copyWith(

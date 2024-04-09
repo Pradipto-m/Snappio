@@ -3,6 +3,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import dataUriParser from 'datauri/parser';
 import path from 'path';
 import Posts from '../Models/postModel';
+import mongoose from 'mongoose';
 
 const sharePost = async (req: Request, res: Response) => {
   try {
@@ -37,6 +38,8 @@ const sharePost = async (req: Request, res: Response) => {
 
 const getAllPosts = async (req: Request, res: Response) => {
   try {
+    const userId = req.body.userId;
+
     const posts = await Posts.aggregate([
       {
         $lookup: {
@@ -53,10 +56,11 @@ const getAllPosts = async (req: Request, res: Response) => {
           'file': '$file',
           'postedBy': '$uploader.username',
           'likes': '$likes',
-          'likedBy': '$likedBy',
+          'loved': { $in: [ userId, '$likedBy' ]},
           'timestamp': '$timestamp',
         },
       },
+      { $sort: { timestamp: -1 }},
     ]);
 
     res.status(200).json(posts);
@@ -66,4 +70,27 @@ const getAllPosts = async (req: Request, res: Response) => {
   }
 };
 
-export default { sharePost, getAllPosts };
+const reactPost = async (req: Request, res: Response) => {
+  try {
+    const userId = req.body.userId;
+    const { postId } = req.body;
+    if (!postId) return res.status(400).json('PostID is required!');
+
+    const post = await Posts.findById(postId);
+    if (!post) return res.status(404).json('Post not found!');
+
+    if (post.likedBy.includes(userId)) {
+      post.likedBy.splice(post.likedBy.indexOf(userId), 1);
+    } else {
+      post.likedBy.push(userId);
+    }
+
+    post.likes = post.likedBy.length;
+    await post.save().then(() => res.status(200).json(post));
+
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+export default { sharePost, getAllPosts, reactPost };

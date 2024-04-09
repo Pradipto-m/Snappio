@@ -59,11 +59,11 @@ class _OnboardState extends State<Onboard>
             AnimatedCrossFade(
               firstChild: _page == 2 ? 
                 Text("Privacy and Safety first!",
-                  style: Theme.of(context).textTheme.bodySmall) :
+                  style: Theme.of(context).textTheme.bodyMedium) :
                 Text("Private and Group Chats!",
-                  style: Theme.of(context).textTheme.bodySmall),
+                  style: Theme.of(context).textTheme.bodyMedium),
               secondChild: Text("Posts, Stories, and more!",
-                style: Theme.of(context).textTheme.bodySmall),
+                style: Theme.of(context).textTheme.bodyMedium),
               crossFadeState: _page == 0 || _page == 2 ?
                 CrossFadeState.showFirst : CrossFadeState.showSecond,
               duration: const Duration(milliseconds: 400),
@@ -102,7 +102,7 @@ class _OnboardState extends State<Onboard>
                     ),
                     child: _page == 2 ?
                       Text("SignUp",
-                      style: Theme.of(context).textTheme.bodySmall)
+                      style: Theme.of(context).textTheme.bodyMedium)
                       : Icon(Ionicons.chevron_forward,
                         color: Theme.of(context).highlightColor),
                   ),

@@ -1,15 +1,16 @@
 import express from 'express';
-import auth from '../Middleware/auth';
-import uploader from '../Middleware/uploader';
+import auth from '../Middlewares/auth';
+import uploader from '../Middlewares/uploader';
 import postController from '../Controllers/postController';
 
 const postRouter = express.Router();
 
-postRouter.post('/api/v1/posts/upload',
-  uploader, auth, postController.sharePost);
+postRouter.post('/upload', uploader, auth, postController.sharePost);
 
-postRouter.get('/api/v1/posts/all', auth, postController.getAllPosts);
+postRouter.use(auth);
 
-postRouter.put('/api/v1/posts/react', auth, postController.reactPost);
+postRouter.get('/all', postController.getAllPosts);
+
+postRouter.put('/react', postController.reactPost);
 
 export default postRouter;

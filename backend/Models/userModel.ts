@@ -33,8 +33,12 @@ const userSchema = new mongoose.Schema({
       validator: (value: string) => {
         return /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(value);
       },
-      message: props => `${props.value} is not valid!`
+      message: props => `${props.value} is not a valid email!`
     }
+  },
+  loves: {
+    type: Number,
+    default: 0,
   },
   avatar: {
     type: String,

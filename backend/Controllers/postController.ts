@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
-import dataUriParser from 'datauri/parser';
 import path from 'path';
+import dataUriParser from 'datauri/parser';
 import Posts from '../Models/postModel';
-import mongoose from 'mongoose';
+import User from '../Models/userModel';
 
 const sharePost = async (req: Request, res: Response) => {
   try {
@@ -78,15 +78,22 @@ const reactPost = async (req: Request, res: Response) => {
 
     const post = await Posts.findById(postId);
     if (!post) return res.status(404).json('Post not found!');
+    const uploader = await User.findById(post.postedBy);
 
-    if (post.likedBy.includes(userId)) {
-      post.likedBy.splice(post.likedBy.indexOf(userId), 1);
+    const index = post.likedBy.indexOf(userId);
+    if (index > -1) {
+      post.likedBy.splice(index, 1);
+      post.likes--;
+      uploader!.loves--;
     } else {
       post.likedBy.push(userId);
+      post.likes++;
+      uploader!.loves++;
     }
 
-    post.likes = post.likedBy.length;
-    await post.save().then(() => res.status(200).json(post));
+    await uploader!.save();
+    await post.save();
+    res.status(200).json(post);
 
   } catch (err) {
     res.status(500).json(err);

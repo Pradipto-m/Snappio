@@ -23,9 +23,9 @@ class SocketServer {
       this.usersSockets[userId] = socket.id;
 
       // handle private messages
-      socket.on('private', ({receiverId, message}) => {
+      socket.on('private', ({receiverId, data, timestamp}) => {
         const socketId = this.usersSockets[receiverId];
-        _namespace.to(socketId).emit('private', {senderId: userId, message});
+        _namespace.to(socketId).emit('private', {senderId: userId, data, timestamp});
       });
 
       // handle group chats
@@ -33,8 +33,8 @@ class SocketServer {
         socket.join(room);
         console.log(`Socket ${socket.id} joined ${room}`);
       });
-      socket.on('room', ({roomId, message}) => {
-        _namespace.to(roomId).emit('room', {sender: userId, message});
+      socket.on('room', ({roomId, data, timestamp}) => {
+        _namespace.to(roomId).emit('room', {senderId: userId, data, timestamp});
       });
 
       // handle disconnection

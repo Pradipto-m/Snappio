@@ -14,7 +14,7 @@ class AuthServices {
 
   final FirebaseAuth _phoneAuth = FirebaseAuth.instance;
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: "http://192.168.0.103:3000/api/v1",
+    baseUrl: "http://192.168.0.103:3000/api/v1/user",
     validateStatus: (status) => status! < 500,
   ));
 
@@ -37,7 +37,7 @@ class AuthServices {
       final String? token = prefs.getString("auth");
 
       if(token != null) {
-        Response response = await _dio.get("/user/auth",
+        Response response = await _dio.get("/auth",
           options: Options(
             headers: {"Authorization": "Bearer $token"},
           ),
@@ -61,7 +61,7 @@ class AuthServices {
   Future<void> signInWithPhone(BuildContext context, String phoneNumber) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("phn", phoneNumber);
+      prefs.setString("phn", phoneNumber.substring(3));
 
       await _phoneAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
@@ -105,11 +105,8 @@ class AuthServices {
   Future<bool> userExists ({required BuildContext context}) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? phone = prefs.getString("phn");
-      Response response = await _dio.get(
-        "/user/find",
-        queryParameters: {"phone": phone},
-      );
+      final String phone = prefs.getString("phn")!;
+      Response response = await _dio.get("/find?phone=$phone");
 
       if(response.statusCode! < 300){
         return true;
@@ -130,7 +127,7 @@ class AuthServices {
   }) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? phone = prefs.getString("phn");
+      final String phone = '+91${prefs.getString("phn")}';
 
       final data = {
         "username": username,
@@ -139,7 +136,7 @@ class AuthServices {
         "email": email,
       };
 
-      Response response = await _dio.post("/user/signup",
+      Response response = await _dio.post("/signup",
         data: data,
       );
 
@@ -163,8 +160,8 @@ class AuthServices {
   }) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? phone = prefs.getString("phn");
-      Response response = await _dio.post("/user/login",
+      final String phone = '+91${prefs.getString("phn")}';
+      Response response = await _dio.post("/login",
         data: {"phone": phone},
       );
 

@@ -32,10 +32,9 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
 
   late String date =
-    DateFormat("yyyy-MM-dd").format(DateTime.parse(widget.date)) ==
-      DateFormat("yyyy-MM-dd").format(DateTime.timestamp())
-        ? "Today"
-        : DateFormat("yyyy-MM-dd").format(DateTime.parse(widget.date));
+    DateTime.now().toIso8601String() == widget.date
+      ? "Today"
+      : DateFormat.yMMMd("en_US").format(DateTime.parse(widget.date));
 
   Future<bool> lovePost (bool loved) async {
     final PostsService postsService = PostsService();

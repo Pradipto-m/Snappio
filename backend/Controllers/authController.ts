@@ -46,7 +46,7 @@ const loginUser = async (req: Request, res: Response) => {
 
 const checkPhone = async (req: Request, res: Response) => {
   try {
-    const phone: string = req.query.phone!.toString();
+    const phone: string = '+91' + req.query.phone!.toString();
     const user = await User.findOne({phone});
     if (user) {
       res.status(200).json({message: 'User exists'});

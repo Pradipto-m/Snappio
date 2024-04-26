@@ -13,21 +13,9 @@ class Themes {
         fontSize: 24.0
       )
     ),
-    primaryIconTheme: ThemeData().iconTheme.copyWith(
-      color: const Color.fromRGBO(0, 0, 0, 0.55),
-    ),
     iconTheme: const IconThemeData().copyWith(
       color: darkBg,
     ),
-    // navigationBarTheme: const NavigationBarThemeData().copyWith(
-    //   backgroundColor: lightAccent,
-    //   elevation: 0,
-    //   height: 75,
-    //   indicatorColor: const Color.fromRGBO(255, 255, 255, 0.25),
-    //   indicatorShape: RoundedRectangleBorder(
-    //     borderRadius: BorderRadius.circular(100)),
-    //   labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-    // ),
     textTheme: ThemeData().textTheme.copyWith(
       titleLarge: const TextStyle(
         color: darkBg,
@@ -81,21 +69,9 @@ class Themes {
         fontSize: 24.0
       )
     ),
-    primaryIconTheme: ThemeData().iconTheme.copyWith(
-      color: const Color.fromRGBO(255, 255, 255, 0.55),
-    ),
     iconTheme: ThemeData().iconTheme.copyWith(
       color: lightContrast,
     ),
-    // navigationBarTheme: const NavigationBarThemeData().copyWith(
-    //   backgroundColor: darkAccent,
-    //   elevation: 0,
-    //   height: 75,
-    //   indicatorColor: const Color.fromRGBO(0, 0, 0, 0.1),
-    //   indicatorShape: RoundedRectangleBorder(
-    //     borderRadius: BorderRadius.circular(100)),
-    //   labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-    // ),
     textTheme: ThemeData().textTheme.copyWith(
       titleLarge: const TextStyle(
         color: lightContrast,

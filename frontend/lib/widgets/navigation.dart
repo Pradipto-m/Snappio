@@ -26,8 +26,8 @@ class _NavBarState extends State<NavBar> {
         controller: _pageController,
         onPageChanged: (index) => setState(() => _selectedIndex = index),
         children: const [
-          ChatSection(),
           PostsFeed(),
+          ChatSection(),
           SnapsPage(),
           ProfilePage()]
       ),
@@ -62,12 +62,12 @@ class _NavBarState extends State<NavBar> {
           },
           tabs: [
             GButton(
-              icon: _selectedIndex == 0 ? Ionicons.chatbubble_ellipses : Ionicons.chatbubble_ellipses_outline,
-              text: 'Chats',
+              icon: _selectedIndex == 0 ? Ionicons.image : Ionicons.image_outline,
+              text: 'Posts',
             ),
             GButton(
-              icon: _selectedIndex == 1 ? Ionicons.image : Ionicons.image_outline,
-              text: 'Posts',
+              icon: _selectedIndex == 1 ? Ionicons.chatbubble_ellipses : Ionicons.chatbubble_ellipses_outline,
+              text: 'Chats',
             ),
             GButton(
               icon: _selectedIndex == 2 ? Ionicons.play : Ionicons.play_outline,

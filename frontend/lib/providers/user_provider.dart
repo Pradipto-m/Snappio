@@ -7,7 +7,7 @@ final initialUser = UserModel(
   name: '',
   phone: '',
   email: '',
-  ver: 0,
+  loves: 0,
 );
 
 class UserNotifier extends StateNotifier<UserModel> {
@@ -17,6 +17,8 @@ class UserNotifier extends StateNotifier<UserModel> {
   get username => state.username;
   get email => state.email;
   get phone => state.phone;
+  get avatar => state.avatar;
+  get loves => state.loves;
 
   void setUser(UserModel user) {
     state = user;

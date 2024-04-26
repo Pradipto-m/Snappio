@@ -11,7 +11,7 @@ import 'package:snappio/widgets/snackbar.dart';
 class PostsService {
 
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'http://192.168.0.103:3000/api/v1',
+    baseUrl: 'http://192.168.0.103:3000/api/v1/posts',
   ));
 
   Future<void> fetchAllPosts(BuildContext context, WidgetRef ref) async {
@@ -19,7 +19,7 @@ class PostsService {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('auth');
 
-      final response = await _dio.get('/posts/all',
+      final response = await _dio.get('/all',
         options: Options(
           headers: {'Authorization': 'Bearer $token'},
       ));
@@ -45,7 +45,7 @@ class PostsService {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('auth');
 
-      final response = await _dio.put('/posts/react',
+      final response = await _dio.put('/react',
         data: {'postId': postId},
         options: Options(
           headers: {'Authorization': 'Bearer $token'},

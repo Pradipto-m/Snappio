@@ -42,6 +42,7 @@ class _PostsFeedState extends ConsumerState<PostsFeed> {
       appBar: AppBar(
         title: Text("Snappio", style: Theme.of(context).textTheme.labelLarge),
         centerTitle: true,
+        leading: const SizedBox(),
         actions: [
         IconButton(
           icon: const Icon(Ionicons.add),

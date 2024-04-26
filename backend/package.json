@@ -7,7 +7,7 @@
   "license": "GPL-3.0",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build && node dist/server.js",
+    "start": "npm run build && node dist/index.js",
     "dev": "nodemon"
   },
   "dependencies": {

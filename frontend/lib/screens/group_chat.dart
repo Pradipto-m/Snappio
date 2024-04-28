@@ -1,12 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:bubble/bubble.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:snappio/models/chat_model.dart';
 import 'package:snappio/providers/chat_provider.dart';
-import 'package:snappio/providers/user_provider.dart';
 import 'package:snappio/services/socket_service.dart';
 
 class ChatRoom extends ConsumerStatefulWidget {
@@ -27,16 +28,20 @@ class _ChatRoomState extends ConsumerState<ChatRoom> {
   @override
   void initState() {
     super.initState();
-    final userId = ref.read(userProvider.notifier).username;
-    stream = StreamController<List<Messages>>();
-    socket = SocketController(userId, ref, _scroll);
-    socket.connectRoom(context, widget.roomId, stream, _scroll);
+    connection();
   }
 
   @override
   void dispose() {
     stream.close();
     super.dispose();
+  }
+
+  void connection () async {
+    stream = StreamController<List<Messages>>();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    socket = SocketController(prefs.getString('socketKey')!, ref, _scroll);
+    socket.connectRoom(context, widget.roomId, stream, _scroll);
   }
 
   void disconnect (BuildContext context, WidgetRef ref) {
@@ -47,9 +52,7 @@ class _ChatRoomState extends ConsumerState<ChatRoom> {
 
   void sendMessage(BuildContext context) {
     if (_message.text.isNotEmpty) {
-      final roomId = widget.roomId;
-      final data = _message.text;
-      socket.sendToRoom(context, roomId, data);
+      socket.sendToRoom(context, widget.roomId, _message.text);
       _message.clear();
     }
   }

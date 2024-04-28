@@ -11,13 +11,13 @@ import 'package:snappio/widgets/snackbar.dart';
 class PostsService {
 
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'http://192.168.0.103:3000/api/v1/posts',
+    baseUrl: 'http://192.168.0.104:3000/api/v1/posts',
   ));
 
   Future<void> fetchAllPosts(BuildContext context, WidgetRef ref) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? token = prefs.getString('auth');
+      final String? token = prefs.getString('authToken');
 
       final response = await _dio.get('/all',
         options: Options(
@@ -43,7 +43,7 @@ class PostsService {
   Future<bool> lovePost (BuildContext context, String postId) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? token = prefs.getString('auth');
+      final String? token = prefs.getString('authToken');
 
       final response = await _dio.put('/react',
         data: {'postId': postId},

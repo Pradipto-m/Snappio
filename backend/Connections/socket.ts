@@ -1,4 +1,5 @@
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
+import validate from "../Middlewares/socketAuth";
 
 class SocketServer {
   private _io: Server;
@@ -15,17 +16,27 @@ class SocketServer {
   }
 
   public init () {
-    const _namespace = this._io.of('/socket/v1');
-    _namespace.on('connection', (socket) => {
+    const _nsp = this._io.of('/socket/v1');
+
+    // socket authentication middleware
+    _nsp.use( async (socket, next) => {
+      if (!socket.handshake.auth.token) {
+        return next(new Error('Unauthorized'));
+      }
+      const token = socket.handshake.auth.token;
+      await validate(token, socket, next);
+    });
+
+    _nsp.on('connection', (socket) => {
       // track connected users
-      const userId: string = socket.handshake.query.user!.toString();
+      const userId: string = socket.data.user;
       console.log(`${userId} connected as ${socket.id}`);
       this.usersSockets[userId] = socket.id;
 
       // handle private messages
       socket.on('private', ({receiverId, data, timestamp}) => {
         const socketId = this.usersSockets[receiverId];
-        _namespace.to(socketId).emit('private', {senderId: userId, data, timestamp});
+        _nsp.to(socketId).emit('private', {senderId: userId, data, timestamp});
       });
 
       // handle group chats
@@ -34,7 +45,7 @@ class SocketServer {
         console.log(`Socket ${socket.id} joined ${room}`);
       });
       socket.on('room', ({roomId, data, timestamp}) => {
-        _namespace.to(roomId).emit('room', {senderId: userId, data, timestamp});
+        _nsp.to(roomId).emit('room', {senderId: userId, data, timestamp});
       });
 
       // handle disconnection

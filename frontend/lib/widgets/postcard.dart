@@ -32,7 +32,8 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
 
   late String date =
-    DateTime.now().toIso8601String() == widget.date
+    DateFormat.yMd().format(DateTime.now()) ==
+    DateFormat.yMd().format(DateTime.parse(widget.date))
       ? "Today"
       : DateFormat.yMMMd("en_US").format(DateTime.parse(widget.date));
 

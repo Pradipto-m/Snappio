@@ -36,8 +36,10 @@ const loginUser = async (req: Request, res: Response) => {
 
     const user = await User.findOne({ phone });
 
-    const token = jwt.sign({id: user!._id}, process.env.JWT_KEY!);
-    res.status(200).json({token});
+    const authToken = jwt.sign({id: user!._id}, process.env.JWT_KEY!);
+    const socketKey = jwt.sign({user: user?.username}, process.env.JWT_SOCKET!);
+
+    res.status(200).json({authToken, socketKey});
 
   } catch (err) {
     res.status(500).json({error: err});

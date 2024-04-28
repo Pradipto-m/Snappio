@@ -20,7 +20,7 @@ const postSchema = new mongoose.Schema({
     default: 0,
   },
   likedBy: {
-    type: [String],
+    type: [mongoose.Schema.Types.ObjectId],
     default: [],
   },
   timestamp: {

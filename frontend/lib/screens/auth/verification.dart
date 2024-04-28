@@ -36,43 +36,32 @@ class _OtpScreenState extends State<OtpScreen> {
       return;
     }
     try {
-      setState(() => _load = true);
+      setState(() { _error = null; _load = true; });
       AuthServices().verifyCredential(context, verificationId, otp)
       .then((value) {
         if (!value) {
-          setState(() {
-            _error = true;
-            _load = true;
-          });
+          setState(() { _error = true; _load = true; });
           showSnackBar(context, "Incorrect OTP");
           Future.delayed(const Duration(milliseconds: 1500), () {
-            setState(() {
-              _error = null;
-              _load = false;
-            });
+            setState(() { _error = null; _load = false; });
           });
           return;
         }
         AuthServices().userExists(context: context).then((value) {
           if (!value) {
-            setState(() {
-              _error = false;
-              _load = true;
-            });
+            setState(() { _error = false; _load = true; });
             Future.delayed(const Duration(milliseconds: 1500), () =>
               Navigator.pushReplacementNamed(context, "/signup"));
           } else {
             AuthServices().loginUser(context: context).then((value) {
               if (value) {
-                setState(() {
-                  _error = false;
-                  _load = true;
-                });
+                setState(() { _error = false; _load = true; });
                 Future.delayed(const Duration(milliseconds: 1500), () =>
                   Navigator.pushReplacementNamed(context, "/splash"));
               }
               else {
                 showSnackBar(context, "Oops, something went wrong!");
+                setState(() { _error = null; _load = false; });
               }
             });
           }

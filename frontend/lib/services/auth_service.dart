@@ -14,7 +14,7 @@ class AuthServices {
 
   final FirebaseAuth _phoneAuth = FirebaseAuth.instance;
   final Dio _dio = Dio(BaseOptions(
-    baseUrl: "http://192.168.0.103:3000/api/v1/user",
+    baseUrl: "http://192.168.0.104:3000/api/v1/user",
     validateStatus: (status) => status! < 500,
   ));
 
@@ -34,7 +34,7 @@ class AuthServices {
   Future<bool> userAuth(BuildContext context, WidgetRef ref) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? token = prefs.getString("auth");
+      final String? token = prefs.getString("authToken");
 
       if(token != null) {
         Response response = await _dio.get("/auth",
@@ -61,7 +61,7 @@ class AuthServices {
   Future<void> signInWithPhone(BuildContext context, String phoneNumber) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("phn", phoneNumber.substring(3));
+      prefs.setString("phone", phoneNumber.substring(3));
 
       await _phoneAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
@@ -105,7 +105,7 @@ class AuthServices {
   Future<bool> userExists ({required BuildContext context}) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String phone = prefs.getString("phn")!;
+      final String phone = prefs.getString("phone")!;
       Response response = await _dio.get("/find?phone=$phone");
 
       if(response.statusCode! < 300){
@@ -127,7 +127,7 @@ class AuthServices {
   }) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String phone = '+91${prefs.getString("phn")}';
+      final String phone = '+91${prefs.getString("phone")}';
 
       final data = {
         "username": username,
@@ -160,13 +160,15 @@ class AuthServices {
   }) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String phone = '+91${prefs.getString("phn")}';
+      final String phone = '+91${prefs.getString("phone")}';
       Response response = await _dio.post("/login",
         data: {"phone": phone},
       );
 
       if(response.statusCode! < 300){
-        prefs.setString("auth", response.data["token"]);
+        prefs.setString("authToken", response.data["authToken"]);
+        prefs.setString("socketKey", response.data["socketKey"]);
+        prefs.remove("phone");
         return true;
       }
       else {

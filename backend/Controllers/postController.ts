@@ -4,10 +4,11 @@ import path from 'path';
 import dataUriParser from 'datauri/parser';
 import Posts from '../Models/postModel';
 import User from '../Models/userModel';
+import mongoose from 'mongoose';
 
 const sharePost = async (req: Request, res: Response) => {
   try {
-    const userId = req.body.userId;
+    const userId = new mongoose.Types.ObjectId(req.body.userId);
     const {content} = req.body;
     if (!content || !userId || !req.file)
       return res.status(400).json('Required data are missing!');
@@ -18,7 +19,7 @@ const sharePost = async (req: Request, res: Response) => {
 
     const upload = await cloudinary.uploader.upload(image, {
       folder: 'Snappio/posts',
-      public_id: `${userId}_${new Date().toJSON()}`,
+      public_id: `${userId}_${new Date().toISOString()}`,
       overwrite: false,
     });
 
@@ -38,7 +39,7 @@ const sharePost = async (req: Request, res: Response) => {
 
 const getAllPosts = async (req: Request, res: Response) => {
   try {
-    const userId = req.body.userId;
+    const userId = new mongoose.Types.ObjectId(req.body.userId);
 
     const posts = await Posts.aggregate([
       {
@@ -52,12 +53,12 @@ const getAllPosts = async (req: Request, res: Response) => {
       { $unwind: '$uploader' },
       {
         $project: {
-          'content': '$content',
-          'file': '$file',
+          'content': 1,
+          'file': 1,
           'postedBy': '$uploader.username',
-          'likes': '$likes',
+          'likes': 1,
           'loved': { $in: [ userId, '$likedBy' ]},
-          'timestamp': '$timestamp',
+          'timestamp': 1,
         },
       },
       { $sort: { timestamp: -1 }},
@@ -72,29 +73,59 @@ const getAllPosts = async (req: Request, res: Response) => {
 
 const reactPost = async (req: Request, res: Response) => {
   try {
-    const userId = req.body.userId;
-    const { postId } = req.body;
-    if (!postId) return res.status(400).json('PostID is required!');
+    const userId = new mongoose.Types.ObjectId(req.body.userId);
+    if (!req.body.postId) return res.status(400).json('PostID is required!');
+    const postId = new mongoose.Types.ObjectId(req.body.postId);
 
-    const post = await Posts.findById(postId);
-    if (!post) return res.status(404).json('Post not found!');
-    const uploader = await User.findById(post.postedBy);
+    const result = await Posts.aggregate([
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'postedBy',
+          foreignField: '_id',
+          as: 'uploader',
+        },
+      },
+      { $unwind: '$uploader' },
+      {
+        $set: {
+          'uploader.loves': {
+            $cond: {
+              if: { $in: [ userId, '$likedBy' ]},
+              then: { $subtract: [ '$uploader.loves', 1 ]},
+              else: { $add: [ '$uploader.loves', 1 ]},
+            },
+          },
+        },
+      },
+      { $match: { _id: postId }},
+      {
+        $set: {
+          likes: {
+            $cond: {
+              if: { $in: [userId, "$likedBy"]},
+              then: { $subtract: ["$likes", 1]},
+              else: { $add: ["$likes", 1]}
+            }
+          },
+          likedBy: {
+            $cond: {
+              if: { $in: [ userId, '$likedBy' ]},
+              then: { $setDifference: [ '$likedBy', [ userId ]]},
+              else: { $concatArrays: [ '$likedBy', [ userId ]]},
+            },
+          },
+        },
+      },
+    ]);
 
-    const index = post.likedBy.indexOf(userId);
-    if (index > -1) {
-      post.likedBy.splice(index, 1);
-      post.likes--;
-      uploader!.loves--;
-    } else {
-      post.likedBy.push(userId);
-      post.likes++;
-      uploader!.loves++;
-    }
+    const { loves } = result[0].uploader;
+    const { likes, likedBy } = result[0];
+    await User.updateOne({ _id: result[0].postedBy }, { loves });
+    await Posts.updateOne({ _id: postId }, { likes, likedBy });
 
-    await uploader!.save();
-    await post.save();
-    res.status(200).json(post);
-
+    res.status(200).json({ status: 'success' });
+    
   } catch (err) {
     res.status(500).json(err);
   }

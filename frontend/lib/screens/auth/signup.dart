@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:lottie/lottie.dart';
 import 'package:snappio/services/auth_service.dart';
 import 'package:snappio/widgets/snackbar.dart';
 
@@ -19,7 +18,7 @@ class _SignupPageState extends State<SignupPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   static bool _load = false;
-  static bool _success = false;
+  static bool? _success;
 
   bool validEmail() {
     return RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
@@ -31,8 +30,8 @@ class _SignupPageState extends State<SignupPage> {
 
   void onSubmit(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      setState(() {_load = true;});
       try {
+        setState(() { _load = true; _success = null; });
         AuthServices().signupUser(
           context: context,
           username: _usernameController.text,
@@ -42,22 +41,23 @@ class _SignupPageState extends State<SignupPage> {
           AuthServices().loginUser(context: context).then((value) {
             if(value) {
               setState(() => _success = true);
-              Future.delayed(const Duration(seconds: 2), () =>
+              Future.delayed(const Duration(milliseconds: 1500), () =>
                 Navigator.pushReplacementNamed(context, "/splash"));
             }
-            else {showSnackBar(context, "Failed to signup user");}
+            else {
+              showSnackBar(context, "Failed to signup user");
+              setState(() { _load = true; _success = false; });
+              Future.delayed(const Duration(milliseconds: 1500), () =>
+                setState(() { _load = false; _success = null; }));
+            }
           });
         });
       } catch (err) {
         log(err.toString());
         showSnackBar(context, "Server Error");
-        setState(() {_load = false;});
+        setState(() { _load = false; _success = null; });
       }
     }
-    setState(() {
-      _success = false;
-      _load = false;
-    });
   }
 
   @override
@@ -137,11 +137,7 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                     ]),
                   ),
-                  SizedBox(height: _success ? 10 : 55),
-                  _success ? SizedBox(
-                    width: 210,
-                    child: Lottie.asset("assets/images/success.json"),
-                  ) :
+                  const SizedBox(height: 50),
                   InkWell(
                     onTap: () => onSubmit(context),
                     splashColor: Colors.transparent,
@@ -154,10 +150,14 @@ class _SignupPageState extends State<SignupPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30)),
                         color: Theme.of(context).cardColor),
-                      child: _load
+                      child: _success == null ? _load
                           ? CircularProgressIndicator(color: Theme.of(context).highlightColor)
-                          : Text("Signup", style: Theme.of(context).textTheme.labelLarge))
+                          : Text("Signup", style: Theme.of(context).textTheme.labelLarge)
+                          : _success!
+                          ? Icon(Ionicons.checkmark_circle_outline, color: Theme.of(context).highlightColor, size: 39)
+                          : Icon(Ionicons.close_circle_outline, color: Theme.of(context).iconTheme.color, size: 39),
                     ),
+                  ),
                   const SizedBox(height: 20),
                 ],
               ),

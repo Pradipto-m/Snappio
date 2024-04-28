@@ -41,7 +41,7 @@ class Themes {
         fontSize: 16.7,
       ),
       displaySmall: const TextStyle(
-        color: lightBg,
+        color: darkBg,
         fontFamily: "Nunito",
         fontSize: 16.0,
       )
@@ -97,7 +97,7 @@ class Themes {
         fontSize: 16.7,
       ),
       displaySmall: const TextStyle(
-        color: darkBg,
+        color: lightBg,
         fontFamily: "Nunito",
         fontSize: 16.0,
       )
